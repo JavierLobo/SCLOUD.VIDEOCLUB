@@ -1,0 +1,208 @@
+########################################
+# 💻 JAVA / IDE / OS .gitignore
+# Autor: Francisco Javier Lobo Martos
+# Proyecto: Configuración base para proyectos Java
+########################################
+
+##########
+# Java
+##########
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# Logs
+*.log
+*.out
+*.tmp
+
+# BlueJ
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+##########
+# Maven
+##########
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+##########
+# Gradle
+##########
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat
+
+##########
+# Eclipse
+##########
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.localhistory/
+.settings/
+.loadpath
+.project
+.classpath
+.recommenders/
+.mymetadata
+.checkstyle
+.factorypath
+.springBeans
+
+##########
+# IntelliJ IDEA
+##########
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+.idea-shelf/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/libraries
+.idea/caches/
+.idea/modules.xml
+.idea/compiler.xml
+.idea/assetWizardSettings.xml
+.idea/gradle.xml
+.idea/jarRepositories.xml
+
+# SonarLint
+.idea/sonarlint/
+
+##########
+# Visual Studio Code
+##########
+.vscode/
+.history/
+.settings/
+*.code-workspace
+
+##########
+# NetBeans
+##########
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+##########
+# macOS
+##########
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+##########
+# Windows
+##########
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+##########
+# Linux
+##########
+*~
+.nfs*
+
+##########
+# General backups / temporales
+##########
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+*.save
+*.old
+*.rej
+*.backup
+*.tmp/
+.cache/
+__pycache__/
+.cache-loader/
+logs/
+log/
+*.pid
+
+##########
+# JetBrains Fleet / Rider / Android Studio
+##########
+.idea/
+*.iml
+.gradle/
+local.properties
+.gradle-cache/
+captures/
+.cxx/
+.externalNativeBuild/
+.navigation/
+outputs/
+intermediates/
+*.hprof
+
+##########
+# Otros
+##########
+.env
+.env.*
+.vscode-test/
+node_modules/
+coverage/
+*.pid.lock
+
+########################################
+# FIN DEL ARCHIVO
+########################################
