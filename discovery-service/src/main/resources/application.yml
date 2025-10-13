@@ -1,2 +1,37 @@
 server:
-  port: 0
+  port: ${DISCOVERY_SERVICE_PORT:8761}
+
+spring:
+  application:
+    name: discovery-service
+  security:
+    user:
+      name: ${EUREKA_USER:admin}
+      password: ${EUREKA_PASS:secret}
+  config:
+    activate:
+      on-profile: local
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    # enable-self-preservation: true
+    wait-time-in-ms-when-sync-empty: 0
+  instance:
+    hostname: gargantua   # o 192.168.1.78
+    prefer-ip-address: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.springframework: INFO

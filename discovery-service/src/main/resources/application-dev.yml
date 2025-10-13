@@ -1,0 +1,9 @@
+spring:
+  profiles: dev
+
+eureka:
+  instance:
+    hostname: ${HOSTNAME}
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 60000
