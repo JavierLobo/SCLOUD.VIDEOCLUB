@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-service
+  namespace: videoclub-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discovery-service
+  template:
+    metadata:
+      labels:
+        app: discovery-service
+    spec:
+      containers:
+        - name: discovery
+          image: videoclub/discovery-service:dev
+          ports:
+            - containerPort: 8761
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-service
+  namespace: videoclub-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: discovery-service
+  ports:
+    - port: 8761
+      targetPort: 8761

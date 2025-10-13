@@ -1,0 +1,8 @@
+spring:
+  profiles: prod
+
+eureka:
+  instance:
+    hostname: discovery-prod
+  server:
+    enable-self-preservation: true
