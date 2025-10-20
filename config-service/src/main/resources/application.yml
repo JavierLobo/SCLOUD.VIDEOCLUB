@@ -1,5 +1,37 @@
 server:
-  port: 0
+  port: ${CONFIG_SERVICE_PORT:8888}
+
 spring:
+  security:
+    user:
+      name: ${CONFIG_USER:configadmin}
+      password: ${CONFIG_PASS:configsecret}
+
   application:
-    name: config-service
+    name: ${CONFIG_SERVICE_NAME:config-service}
+
+  profiles:
+    active: native
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/JavierLobo/SCLOUD.VIDEOCLUB-CONFIG.git
+          default-label: master
+          search-paths: config
+          clone-on-start: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASS:secret}@localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud: INFO

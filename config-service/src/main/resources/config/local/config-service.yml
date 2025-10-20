@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: config-service
+
+custom:
+  message: "Configuración del CONFIG-SERVICE cargada correctamente desde el repositorio Git"

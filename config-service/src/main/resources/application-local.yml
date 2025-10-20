@@ -1,0 +1,29 @@
+server:
+  port: ${CONFIG_SERVICE_PORT:8888}
+
+spring:
+  profiles:
+    active: native
+
+  security:
+    user:
+      name: ${CONFIG_USER:configadmin}
+      password: ${CONFIG_PASS:configsecret}
+
+  application:
+    name: ${CONFIG_SERVICE_NAME:config-service}
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+logging:
+  level:
+    root: INFO

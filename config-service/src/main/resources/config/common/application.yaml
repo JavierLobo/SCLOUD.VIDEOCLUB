@@ -1,0 +1,2 @@
+global:
+  message: "Configuración global cargada correctamente desde Config-Service"

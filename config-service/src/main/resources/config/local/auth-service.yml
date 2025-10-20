@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: auth-service
+
+custom:
+  message: "Configuración del AUTH-SERVICE cargada desde Config-Service"

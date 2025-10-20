@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/login", "/auth/validate").permitAll()
-                    .requestMatchers("/eureka/**").permitAll()
+                    .requestMatchers("/eureka/**").hasRole("SYSTEM")
                     .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .build();
