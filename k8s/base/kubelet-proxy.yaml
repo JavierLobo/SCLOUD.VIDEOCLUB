@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kubelet-proxy
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: kubelet-proxy
+  template:
+    metadata:
+      labels:
+        app: kubelet-proxy
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: kubelet-proxy
+          image: alpine/socat
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Starting kubelet proxy on port 10250..."
+              socat TCP-LISTEN:10250,fork,reuseaddr TCP:127.0.0.1:10250
+          securityContext:
+            privileged: true

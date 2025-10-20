@@ -1,0 +1,11 @@
+# Variables de entorno globales compartidas por todos los microservicios.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: videoclub-global-config
+  
+data:
+  SPRING_PROFILES_ACTIVE: "default"
+  LOGGING_LEVEL_ROOT: "INFO"
+  CONFIG_SERVER_URL: "http://config-service:8888"
+  EUREKA_SERVER_URL: "http://discovery-service:8761/eureka/"

@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rental-service
+spec:
+  template:
+    spec:
+      containers:
+        - name: rental-service
+          env:
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://config-service-dev:8888
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://discovery-service-dev:8761/eureka/

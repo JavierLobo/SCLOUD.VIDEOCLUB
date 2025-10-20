@@ -1,0 +1,7 @@
+# Solo necesario si no lo tienes ya (para que Nginx actúe como Ingress Controller).
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+spec:
+  controller: k8s.io/ingress-nginx

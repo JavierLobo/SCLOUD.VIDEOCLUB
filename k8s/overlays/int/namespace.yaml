@@ -1,0 +1,10 @@
+ # Define el espacio de nombres donde vivirán todos los servicios.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: videoclub-int
+  labels:
+    environment: int
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/audit: baseline
+    pod-security.kubernetes.io/warn: baseline

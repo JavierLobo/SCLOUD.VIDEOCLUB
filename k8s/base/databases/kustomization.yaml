@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - postgresql/auth-db.yaml
+  - postgresql/rental-db.yaml
+  - postgresql/payment-db.yaml
+  - mysql/customer-db.yaml
+  - mongodb/catalog-db.yaml
+  - mongodb/inventory-db.yaml
+  - redis/notification-db.yaml
