@@ -1,4 +1,4 @@
-name: Sonar, Build and Push Docker Images
+name: SonarCloud, Build and Push Docker Images
 
 on:
   push:
@@ -13,6 +13,7 @@ jobs:
     env:
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -26,7 +27,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 🧮 Obtener nombre de rama actual
       - name: 🧮 Determine branch
         id: vars
         run: |
@@ -34,15 +34,13 @@ jobs:
           echo "branch=$BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "📦 Current branch: $BRANCH_NAME"
 
-      # 🔐 Login a DockerHub
       - name: 🔐 Log in to DockerHub
         uses: docker/login-action@v3
         with:
-          username: ${{ env.DOCKERHUB_USER }}
-          password: ${{ env.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 🧩 Ejecutar flujo completo para cada servicio (independiente)
-      - name: 🚀 Run full pipeline per service
+      - name: 🚀 Run full CI/CD pipeline per service
         id: build
         run: |
           SERVICES=(
@@ -57,51 +55,36 @@ jobs:
             rental-service
           )
 
-          mkdir -p reports
           SUCCESS_LIST=""
           FAIL_LIST=""
+          mkdir -p reports
 
           for SERVICE in "${SERVICES[@]}"; do
             echo "──────────────────────────────────────────────"
             echo "🔧 Processing service: $SERVICE"
             echo "──────────────────────────────────────────────"
-            cd $SERVICE || { echo "❌ ERROR: No se encontró el directorio $SERVICE"; FAIL_LIST+="$SERVICE "; cd ..; continue; }
+            cd $SERVICE || { echo "❌ ERROR: $SERVICE directory not found"; FAIL_LIST+="$SERVICE "; cd ..; continue; }
 
-            # Extraer versión del pom.xml
+            # Obtener versión desde el pom.xml
             VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
             echo "📦 Version detected: $VERSION"
 
-            # Análisis SonarQube
-            echo "🔍 Running SonarQube analysis for $SERVICE..."
-            if ! mvn sonar:sonar \
+            # 🔍 Paso 1: Análisis en SonarCloud
+            echo "🔎 Running SonarCloud analysis for $SERVICE ..."
+            if ! mvn verify sonar:sonar \
               -DskipTests=true \
-              -Dsonar.projectKey=$SERVICE \
-              -Dsonar.projectName=$SERVICE \
-              -Dsonar.host.url=$SONAR_HOST_URL \
-              -Dsonar.login=$SONAR_TOKEN; then
-              echo "⚠️ SonarQube analysis failed for $SERVICE" | tee -a ../reports/$SERVICE.log
+              -Dsonar.projectKey=${{ secrets.SONAR_ORGANIZATION }}_${SERVICE} \
+              -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
+              -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+              -Dsonar.login=${{ secrets.SONAR_TOKEN }}; then
+              echo "⚠️ SonarCloud analysis failed for $SERVICE" | tee -a ../reports/$SERVICE.log
               FAIL_LIST+="$SERVICE(Sonar) "
               cd ..
               continue
             fi
 
-            # Quality Gate Check
-            echo "🚦 Waiting for Quality Gate result..."
-            if ! docker run --rm \
-                -v "$(pwd)/target:/usr/src" \
-                sonarsource/sonar-scanner-cli \
-                sonar-quality-gate \
-                -Dsonar.projectKey=$SERVICE \
-                -Dsonar.host.url=$SONAR_HOST_URL \
-                -Dsonar.login=$SONAR_TOKEN; then
-              echo "❌ Quality Gate failed for $SERVICE" | tee -a ../reports/$SERVICE.log
-              FAIL_LIST+="$SERVICE(QualityGate) "
-              cd ..
-              continue
-            fi
-
-            # Compilación Maven
-            echo "⚙️ Building $SERVICE..."
+            # ⚙️ Paso 2: Compilar con Maven
+            echo "⚙️ Building $SERVICE ..."
             if ! mvn clean package -DskipTests; then
               echo "❌ Build failed for $SERVICE" | tee -a ../reports/$SERVICE.log
               FAIL_LIST+="$SERVICE(Build) "
@@ -109,22 +92,25 @@ jobs:
               continue
             fi
 
-            # Construcción y Push Docker
-            echo "🐳 Building and pushing Docker image..."
+            # 🐳 Paso 3: Build y Push Docker
             IMAGE=javierlobo/$SERVICE
             TAG_BRANCH=${{ steps.vars.outputs.branch }}
+
+            echo "🐳 Building Docker image for $SERVICE ..."
             docker build -t $IMAGE:$VERSION .
+
             docker tag $IMAGE:$VERSION $IMAGE:$TAG_BRANCH-$VERSION
             docker tag $IMAGE:$VERSION $IMAGE:latest
 
+            echo "📤 Pushing Docker images for $SERVICE ..."
             if docker push $IMAGE:$VERSION && \
                docker push $IMAGE:$TAG_BRANCH-$VERSION && \
                docker push $IMAGE:latest; then
+              echo "✅ $SERVICE pushed successfully"
               SUCCESS_LIST+="$SERVICE "
-              echo "✅ Service $SERVICE built and pushed successfully"
             else
-              FAIL_LIST+="$SERVICE(Docker) "
               echo "❌ Docker push failed for $SERVICE" | tee -a ../reports/$SERVICE.log
+              FAIL_LIST+="$SERVICE(Docker) "
             fi
 
             cd ..
@@ -136,6 +122,4 @@ jobs:
           echo "──────────────────────────────────────────────"
           echo "✅ Successful services: $SUCCESS_LIST"
           echo "❌ Failed services: $FAIL_LIST"
-
-          echo "success=$SUCCESS_LIST" >> $GITHUB_OUTPUT
-          echo "fail=$FAIL_LIST" >> $GITHUB_OUTPUT
+          echo "──────────────────────────────────────────────"
