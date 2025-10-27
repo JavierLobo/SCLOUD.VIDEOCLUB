@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-db
+  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-db
+  template:
+    metadata:
+      labels:
+        app: inventory-db
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:4.4
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: inventory_db
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: inventory_user
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-db-secret
+                  key: password
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: inventory-db-pvc
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: inventory-db-secret
+  
+type: Opaque
+stringData:
+  password: "inventory123"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: inventory-db-pvc
+  
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-db
+  
+spec:
+  selector:
+    app: inventory-db
+  ports:
+    - port: 27017
+      targetPort: 27017

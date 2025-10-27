@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - auth/deployment.yaml
+  - auth/service.yaml
+  - auth/serviceaccount.yaml
+  - catalog/deployment.yaml
+  - config/deployment.yaml
+  - config/service.yaml
+  - config/serviceaccount.yaml
+  - customer/deployment.yaml
+  - discovery/deployment.yaml
+  - discovery/service.yaml
+  - discovery/serviceaccount.yaml
+  - gateway/deployment.yaml
+  - gateway/service.yaml
+  - gateway/serviceaccount.yaml
+  - inventory/deployment.yaml
+  - notification/deployment.yaml
+  - payment/deployment.yaml
+  - rental/deployment.yaml

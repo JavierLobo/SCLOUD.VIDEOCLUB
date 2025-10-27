@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: videoclub-dev
+nameSuffix: -dev
+
+resources:
+  - ../../base
+  - namespace.yaml
+  - ingress.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: config-service
+    path: patches/config-service-resources.yaml
+  - path: patches/auth-service-resources.yaml
+  - path: patches/discovery-service-resources.yaml
+  - path: patches/gateway-service-resources.yaml
+  - path: patches/catalog-service-overrides.yaml
+  - path: patches/customer-service-overrides.yaml
+  - path: patches/inventory-service-overrides.yaml
+  - path: patches/payment-service-overrides.yaml
+  - path: patches/rental-service-overrides.yaml
+  - path: patches/notification-service-overrides.yaml
+  - path: configmap-patch.yaml
+  - path: secrets-patch.yaml

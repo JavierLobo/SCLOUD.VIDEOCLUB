@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rental-db
+  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rental-db
+  template:
+    metadata:
+      labels:
+        app: rental-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          env:
+            - name: POSTGRES_DB
+              value: rental_db
+            - name: POSTGRES_USER
+              value: rental_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rental-db-secret
+                  key: password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: rental-db-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rental-db-pvc
+  
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rental-db-secret
+  
+type: Opaque
+stringData:
+  password: "rental123"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rental-db
+  
+spec:
+  selector:
+    app: rental-db
+  ports:
+    - port: 5432
+      targetPort: 5432

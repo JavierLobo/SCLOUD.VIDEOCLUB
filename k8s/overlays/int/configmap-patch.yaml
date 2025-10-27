@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: videoclub-global-config
+data:
+  SPRING_PROFILES_ACTIVE: "int"
+  EUREKA_URL: "http://discovery-service-int:8761/eureka/"
+  CONFIG_URL: "http://config-service-int:8888"
+  LOGGING_LEVEL_ROOT: "INFO"
