@@ -3,6 +3,6 @@ spring:
 
 eureka:
   instance:
-    hostname: discovery-prod
+    hostname: ${HOSTNAME}
   server:
     enable-self-preservation: true

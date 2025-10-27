@@ -8,6 +8,9 @@ spring:
     user:
       name: ${EUREKA_USER:admin}
       password: ${EUREKA_PASS:secret}
+  config:
+    activate:
+      on-profile: local
 
 eureka:
   client:
@@ -17,7 +20,8 @@ eureka:
     # enable-self-preservation: true
     wait-time-in-ms-when-sync-empty: 0
   instance:
-    hostname: localhost
+    hostname: gargantua   # o 192.168.1.78
+    prefer-ip-address: false
 
 management:
   endpoints:
@@ -27,13 +31,6 @@ management:
   endpoint:
     health:
       show-details: always
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: dev
 
 logging:
   level:

@@ -3,4 +3,4 @@ spring:
   
 eureka:
   instance:
-    hostname: discovery-int
+    hostname: ${HOSTNAME}
