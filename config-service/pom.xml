@@ -5,14 +5,21 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+  <artifactId>config-service</artifactId>
+  <version>v0.0.0</version>
+
   <parent>
     <groupId>com.javierlobo.videoclub</groupId>
     <artifactId>videoclub</artifactId>
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>config-service</artifactId>
   <name>config-service</name>
+
+  <properties>
+    <environment>local</environment>
+    <spring-boot.build-image.skip>true</spring-boot.build-image.skip>
+  </properties>
 
   <dependencies>
     <!-- Spring Boot Config Server -->
@@ -39,4 +46,67 @@
         <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <dockerHost>unix:///var/run/docker.sock</dockerHost>
+          <cleanCache>true</cleanCache> <!-- evita fallos al limpiar volumenes pack -->
+          <image>
+            <name>javixulobo/${parent.artifactId}-${project.artifactId}-${environment}:${project.version}</name>
+          </image>
+          <skip>${spring-boot.build-image.skip}</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>build-image</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build-image</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>local</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <environment>local</environment>
+        <spring-boot.build-image.skip>true</spring-boot.build-image.skip>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>dev</id>
+      <properties>
+        <environment>dev</environment>
+        <spring-boot.build-image.skip>false</spring-boot.build-image.skip>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>int</id>
+      <properties>
+        <environment>int</environment>
+        <spring-boot.build-image.skip>false</spring-boot.build-image.skip>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>pro</id>
+      <properties>
+        <environment>pro</environment>
+        <spring-boot.build-image.skip>false</spring-boot.build-image.skip>
+      </properties>
+    </profile>
+  </profiles>
 </project>
