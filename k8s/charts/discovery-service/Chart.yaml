@@ -1,0 +1,6 @@
+apiVersion: v2
+name: discovery-service
+description: Helm chart para el servicio de descubrimiento
+type: application
+version: 0.1.0            # versión del chart
+appVersion: "v0.0.1"      # versión de la app (puedes sincronizarla con Maven)

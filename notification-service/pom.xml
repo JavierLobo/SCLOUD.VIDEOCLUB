@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>notification-service</artifactId>
-  <version>v0.0.0</version>
+  <version>v0.0.1</version>
 
   <parent>
     <groupId>com.javierlobo.videoclub</groupId>
@@ -17,6 +17,14 @@
   <properties>
     <environment>local</environment>
     <spring-boot.build-image.skip>true</spring-boot.build-image.skip>
+    <docker.image.name>javixulobo/${parent.artifactId}-${project.artifactId}-${environment}:${project.version}</docker.image.name>
+    <minikube.command>minikube</minikube.command>
+    <minikube.image.load.skip>true</minikube.image.load.skip>
+    <helm.command>helm</helm.command>
+    <helm.deploy.skip>true</helm.deploy.skip>
+    <helm.chart.path>${project.basedir}/../k8s/charts/notification-service</helm.chart.path>
+    <helm.release.name>notification-service-${environment}</helm.release.name>
+    <helm.namespace>videoclub-${environment}</helm.namespace>
   </properties>
   
   <dependencies>
@@ -60,6 +68,51 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>minikube-load-image</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${minikube.image.load.skip}</skip>
+              <executable>${minikube.command}</executable>
+              <arguments>
+                <argument>image</argument>
+                <argument>load</argument>
+                <argument>${docker.image.name}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>helm-upgrade</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${helm.deploy.skip}</skip>
+              <executable>${helm.command}</executable>
+              <arguments>
+                <argument>upgrade</argument>
+                <argument>--install</argument>
+                <argument>${helm.release.name}</argument>
+                <argument>${helm.chart.path}</argument>
+                <argument>--namespace</argument>
+                <argument>${helm.namespace}</argument>
+                <argument>--create-namespace</argument>
+                <argument>--set</argument>
+                <argument>image.tag=${project.version}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -80,6 +133,8 @@
       <properties>
         <environment>dev</environment>
         <spring-boot.build-image.skip>false</spring-boot.build-image.skip>
+        <minikube.image.load.skip>false</minikube.image.load.skip>
+        <helm.deploy.skip>false</helm.deploy.skip>
       </properties>
     </profile>
 

@@ -23,20 +23,13 @@ spec:
           type: RuntimeDefault
       containers:
         - name: discovery-service
-          image: javixulobo/videoclub-discovery-service-dev:v0.0.0
+          image: javixulobo/videoclub-discovery-service-dev:v0.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8761
           env:
             - name: SPRING_CLOUD_CONFIG_URI
               value: http://config-service-dev:8888
-          resources:
-            requests:
-              cpu: "1m"
-              memory: "25Mi"
-            limits:
-              cpu: "10m"
-              memory: "50Mi"
           readinessProbe:
             httpGet:
               path: /actuator/health

@@ -1,0 +1,31 @@
+image:
+  repository: javixulobo/videoclub-rental-service-dev
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  port: 8084
+
+serviceAccount:
+  create: false
+  name: rental-service-sa
+
+resources:
+  requests:
+    cpu: 150m
+    memory: 256Mi
+  limits:
+    cpu: 600m
+    memory: 512Mi
+
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: dev
+  - name: SPRING_CLOUD_CONFIG_ENABLED
+    value: "false"
+  - name: SERVER_PORT
+    value: "8084"
+  - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+    value: http://discovery-service-dev:8761/eureka/

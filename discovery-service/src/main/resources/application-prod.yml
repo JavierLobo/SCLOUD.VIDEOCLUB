@@ -1,8 +1,14 @@
 spring:
-  profiles: prod
-
+  config:
+    activate:
+      on-profile: prod
 eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE:http://localhost:8761/eureka/}
   instance:
-    hostname: ${HOSTNAME}
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:${HOSTNAME}}
   server:
     enable-self-preservation: true

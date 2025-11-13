@@ -24,3 +24,25 @@ patches:
   - path: patches/notification-service-overrides.yaml
   - path: configmap-patch.yaml
   - path: secrets-patch.yaml
+
+images:
+  - name: javixulobo/videoclub-config-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-discovery-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-gateway-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-auth-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-customer-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-catalog-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-rental-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-payment-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-inventory-service-dev
+    newTag: v0.0.1
+  - name: javixulobo/videoclub-notification-service-dev
+    newTag: v0.0.1

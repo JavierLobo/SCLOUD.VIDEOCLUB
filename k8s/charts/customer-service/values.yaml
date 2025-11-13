@@ -1,0 +1,31 @@
+image:
+  repository: javixulobo/videoclub-customer-service-dev
+  tag: v0.0.1
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  port: 8082
+
+serviceAccount:
+  create: true
+  name: ""
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 768Mi
+  limits:
+    cpu: 250m
+    memory: 1024Mi
+
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: dev
+  - name: SPRING_CLOUD_CONFIG_ENABLED
+    value: "false"
+  - name: SERVER_PORT
+    value: "8082"
+  - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+    value: http://discovery-service-dev:8761/eureka/

@@ -1,0 +1,26 @@
+image:
+  repository: javixulobo/videoclub-discovery-service-dev
+  tag: v0.0.1          # se sobreescribe desde Maven con ${project.version}
+  pullPolicy: IfNotPresent
+
+replicaCount: 2
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 384Mi
+
+env:
+  - name: SPRING_PROFILES_ACTIVE
+    value: dev
+  - name: EUREKA_INSTANCE_HOSTNAME
+    value: discovery-service-dev
+  - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+    value: http://discovery-service-dev:8761/eureka/
+  - name: SPRING_CLOUD_CONFIG_ENABLED
+    value: "false"
+  - name: SERVER_PORT
+    value: "8761"
