@@ -1,0 +1,8 @@
+spring:
+  profiles: prod
+
+eureka:
+  instance:
+    hostname: ${HOSTNAME}
+  server:
+    enable-self-preservation: true

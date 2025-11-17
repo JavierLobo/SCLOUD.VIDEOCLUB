@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: videoclub/auth-service:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: JWT_SECRET
+              value: "ThisIsA32BytesSecretKeyForJWT123456!"
+            - name: EUREKA_USER
+              value: "admin"
+            - name: EUREKA_PASS
+              value: "secret"
+            - name: EUREKA_URL
+              value: "http://admin:secret@discovery-service:8761/eureka/"
