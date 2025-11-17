@@ -4,6 +4,9 @@
 # Proyecto: Configuración base para proyectos Java
 ########################################
 
+.tools/
+HistoricoGpt/
+
 ##########
 # Java
 ##########
