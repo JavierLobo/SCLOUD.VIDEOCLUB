@@ -9,9 +9,6 @@ spring:
       name: ${EUREKA_USER:admin}
       password: ${EUREKA_PASS:secret}
       roles: SYSTEM
-  config:
-    activate:
-      on-profile: local
 
 eureka:
   client:
@@ -23,7 +20,7 @@ eureka:
     # enable-self-preservation: true
     wait-time-in-ms-when-sync-empty: 0
   instance:
-    hostname: gargantua   # o 192.168.1.78
+    hostname: ${HOSTNAME:localhost}   # o 192.168.1.78
     prefer-ip-address: false
 
 management:

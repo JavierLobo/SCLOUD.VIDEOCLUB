@@ -1,6 +1,3 @@
-spring:
-  profiles: int
-  
 eureka:
   instance:
     hostname: ${HOSTNAME}
